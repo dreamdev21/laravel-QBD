@@ -35,6 +35,8 @@
 
         <hr>
 
+        @if(count($datas))
+
         <table class="table table-bordered table-hover table-striped">
             {{--<thead>--}}
             {{--<tr>--}}
@@ -246,10 +248,10 @@
                                                                                           class="form-control">
                             </div>
                             <div class="form-group"><label>Content Order : </label> <input type="text"
-                                                                                          name="content_order" required
-                                                                                          autofocus
-                                                                                          value=""
-                                                                                          class="form-control">
+                                                                                           name="content_order" required
+                                                                                           autofocus
+                                                                                           value=""
+                                                                                           class="form-control">
                             </div>
                             <div class="form-group"><label>Content : </label> <input type="text"
                                                                                      name="content" required
@@ -287,4 +289,8 @@
     {{--@endforeach--}}
     {{--}--}}
     {{--</script>--}}
+
+    @else
+        No Data!
+    @endif
 @endsection
