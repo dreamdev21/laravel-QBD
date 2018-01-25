@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Qgrid;
 use DateTime;
 use Illuminate\Support\Facades\Response;
+use DB;
 
 class QgridController extends Controller
 {
@@ -28,8 +29,9 @@ class QgridController extends Controller
     }
     public function create(Request $request)
     {
+        $last_row = DB::table('qgrids')->latest('id')->first();
         Qgrid::create([
-            'content_id' => $request['content_id'],
+            'content_id' => $last_row->id + 1,
             'parent_id' => $request['parent_id'],
             'content_type' => $request['content_type'],
             'content' => $request['content'],
@@ -55,13 +57,13 @@ class QgridController extends Controller
 
         $data = Qgrid::orderBy( 'id')->get();
 
-        $data_csv[0] = array('id','content_id', 'parent_id', 'content_type', 'content', 'content_order', 'creation_date', 'change_date');
+        $data_csv[0] = array('content_id', 'parent_id', 'content_type', 'content', 'content_order', 'creation_date', 'change_date');
 
         $i  = 0;
 
         foreach ( $data as $line ) {
             $i = $i+1;
-            $data_csv[$i] = array( $line->id ,$line->content_id,$line->parent_id, $line->content_type , $line->content , $line->content_order , $line->creation_date, $line->change_date);
+            $data_csv[$i] = array( $line->content_id,$line->parent_id, $line->content_type , $line->content , $line->content_order , $line->creation_date, $line->change_date);
         }
 
         $date_now = new DateTime();

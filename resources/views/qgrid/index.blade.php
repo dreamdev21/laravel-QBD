@@ -29,7 +29,7 @@
                 <div class="lead">QGrid Datatable</div>
             </div>
             <div class="pull-right">
-                <a href="/qgrid/add" class="btn btn-success" data-toggle="modal" data-target="#newmodal">Add new</a>
+                <a class="btn btn-success" data-toggle="modal" data-target="#newmodal">Add new</a>
                 <a href="/qgrid/export_csv" class="btn btn-primary">Export CSV</a>
                 <a href="/qgrid/export_json" class="btn btn-primary">Export JSON</a>
             </div>
@@ -109,42 +109,23 @@
                 <div class="modal-body">
                     <div class="row">
                         <h3 class="m-t-none m-b  text-center">Add new</h3>
-                        <div class="col-sm-10 col-sm-offset-1 ">
-                            {{ Form::open(['method' => 'get','route' => ['/qgrid/add', $data->id],'style'=>'display:inline','class'=>'form-horizontal']) }}
-
-                            <div class="form-group"><label>Content ID : </label> <input type="number"
+                        <div class="col-sm-10 col-sm-offset-1">
+                            {{ Form::open(['method' => 'get','route' => ['/qgrid/add'],'style'=>'display:inline','class'=>'form-horizontal','id'=>'addform']) }}
+                            <div class="form-group" style="display: none;"><label>Content ID : </label> <input type="number"
                                                                                         name="content_id"
-                                                                                        required autofocus
+
                                                                                         value=""
                                                                                         class="form-control">
                             </div>
-                            <div class="form-group"><label>Parent ID : </label> <input type="number"
-                                                                                       name="parent_id" required
-                                                                                       autofocus
-                                                                                       value=""
-                                                                                       class="form-control">
+                            <div class="form-group"><label>Content Type : </label>
+                                <select class="selectpicker form-control" name="content_type" onchange="selectContent_type(this.value);">
+                                    <option value=""></option>
+                                    <option value="question">question</option>
+                                    <option value="background">background</option>
+                                    <option value="discussion">discussion</option>
+                                </select>
                             </div>
-                            <div class="form-group"><label>Content Type : </label> <input type="text"
-                                                                                          name="content_type" required
-                                                                                          autofocus
-                                                                                          value=""
-                                                                                          class="form-control">
-                            </div>
-                            <div class="form-group"><label>Content Order : </label> <input type="text"
-                                                                                           name="content_order" required
-                                                                                           autofocus
-                                                                                           value=""
-                                                                                           class="form-control">
-                            </div>
-                            <div class="form-group"><label>Content : </label> <input type="text"
-                                                                                     name="content" required
-                                                                                     autofocus
-                                                                                     value=""
-                                                                                     class="form-control">
-                            </div>
-
                         </div>
-
                     </div>
                     <div class="row">
                         {{ Form::submit('Submit', ['class' => 'btn btn-sm btn-success pull-right m-t-n-xs','style' => 'margin-right: 60px;']) }}
@@ -157,66 +138,150 @@
     </div>
     </div>
 
-    <script type="text/javascript">
-        @foreach($datas as $data)
-        function showContent{{$data['id']}}() {
-            hideContent();
-            $('#question{{$data['id']}}').addClass('active');
-            $("#narrow{{$data['id']}}").remove();
-            $('#question{{$data['id']}}').append('<i id = "narrow{{$data['id']}}" class="fa fa-arrow-left" aria-hidden="true" style = "color:white"></i>');
-            $('.showcontent').show();
-            $('#showcontent').append('<div id="content{{$data["id"]}}"><div class="row">\n' +
-                '                            <h3 class="m-t-none m-b  text-center">Details</h3>\n' +
-                '                                {{ Form::open(['method' => 'Update','route' => ['/qgrid/update', $data->id],'style'=>'display:inline','class'=>'form-horizontal']) }}\n' +
-                '                            <div class="col-sm-10 col-sm-offset-1 ">\n' +
-                '\n' +
-                '                                <div class="form-group"><label>Content ID : </label> <input type="number"\n' +
-                '                                                                                            name="content_id"\n' +
-                '                                                                                            required autofocus\n' +
-                '                                                                                            value="{{$data["content_id"]}}"\n' +
-                '                                                                                            class="form-control">\n' +
-                '                                </div>\n' +
-                '                                <div class="form-group"><label>Parent ID : </label> <input type="number"\n' +
-                '                                                                                           name="parent_id" required\n' +
-                '                                                                                           autofocus\n' +
-                '                                                                                           value="{{$data["parent_id"]}}"\n' +
-                '                                                                                           class="form-control">\n' +
-                '                                </div>\n' +
-                '\n' +
-                '                                <div class="form-group"><label>Content : </label> <input type="text"\n' +
-                '                                                                                         name="content" required\n' +
-                '                                                                                         autofocus\n' +
-                '                                                                                         value="{{$data["content"]}}"\n' +
-                '                                                                                         class="form-control">\n' +
-                '                                </div>\n' +
-                '\n' +
-                '                                <div class="form-group"><label>Created Date : {{$data["created_at"]}}</label>\n' +
-                '                                </div>\n' +
-                '                                <div class="form-group"><label>Changed Date : {{$data["updated_at"]}}</label>\n' +
-                '                                </div>\n' +
-                '                            </div>\n' +
-                '\n' +
-                '                            {{ Form::submit('Update', ['class' => 'btn btn-sm btn-success pull-right m-t-n-xs','style' => 'margin-right: 60px;']) }}\n' +
-                '                            {{ Form::close() }}\n' +
-                '                            {{ Form::open(['method' => 'Destroy','route' => ['/qgrid/delete', $data->id],'style'=>'display:inline','class'=>'form-horizontal']) }}\n' +
-                '                            {{ Form::submit('Delete', ['class' => 'btn btn-sm btn-danger pull-left m-t-n-xs','style' => 'margin-left: 60px;']) }}\n' +
-                '\n' +
-                '                            {{ Form::close() }}\n' +
-                '                        </div></div>');
-        }
+<script type="text/javascript">
+function selectContent_type(sel)
+{
+    if(sel == "question"){
+        $('#addcontent').remove();
+        $('#addform').append('<div id="addcontent">\n' +
+            '    <div class="form-group"><input type="hidden"\n' +
+            '                                                               name="parent_id" required\n' +
+            '                                                               autofocus\n' +
+            '                                                               value="0"\n' +
+            '                                                               class="form-control">\n' +
+            '    </div>\n' +
+            '    <div class="form-group"><label>Content Order : </label> <input type="text"\n' +
+            '                                                                   name="content_order" required\n' +
+            '                                                                   autofocus\n' +
+            '                                                                   value=""\n' +
+            '                                                                   class="form-control">\n' +
+            '    </div>\n' +
+            '    <div class="form-group"><label>Content : </label> <input type="text"\n' +
+            '                                                             name="content" required\n' +
+            '                                                             autofocus\n' +
+            '                                                             value=""\n' +
+            '                                                             class="form-control">\n' +
+            '    </div>\n' +
+            '</div>');
+    }else if(sel == "background"){
+        $('#addcontent').remove();
+        $('#addform').append('<div id="addcontent">\n' +
+            '    <div class="form-group"><label>Parent : </label>\n' +
+            '        <select class="selectpicker form-control" name="parent_id">\n' +
+            '            @foreach($datas as $data)\n' +
+            '                @if($data['content_type'] == 'question')\n' +
+            '                    <option value="{{$data['content_id'] }}">{{ $data['content'] }}</option>\n' +
+            '                @endif\n' +
+            '            @endforeach\n' +
+            '        </select>\n' +
+            '\n' +
+            '    </div>\n' +
+            '    <div class="form-group"><label>Content Order : </label> <input type="text"\n' +
+            '                                                                   name="content_order" required\n' +
+            '                                                                   autofocus\n' +
+            '                                                                   value=""\n' +
+            '                                                                   class="form-control">\n' +
+            '    </div>\n' +
+            '    <div class="form-group"><label>Content : </label> <input type="text"\n' +
+            '                                                             name="content" required\n' +
+            '                                                             autofocus\n' +
+            '                                                             value=""\n' +
+            '                                                             class="form-control">\n' +
+            '    </div>\n' +
+            '</div>');
+    }else if(sel == "discussion"){
+        $('#addcontent').remove();
+        $('#addform').append('<div id="addcontent">\n' +
+            '    <div class="form-group"><label>Parent : </label>\n' +
+            '        <select class="selectpicker form-control" name="parent_id">\n' +
+            '            @foreach($datas as $data)\n' +
+            '                @if($data['content_type'] == 'background')\n' +
+            '                    <option value="{{$data['parent_id'] }}">{{ $data['content'] }}</option>\n' +
+            '                @endif\n' +
+            '            @endforeach\n' +
+            '        </select>\n' +
+            '    </div>\n' +
+            '    <div class="form-group"><label>Content Order : </label> <input type="text"\n' +
+            '                                                                   name="content_order" required\n' +
+            '                                                                   autofocus\n' +
+            '                                                                   value=""\n' +
+            '                                                                   class="form-control">\n' +
+            '    </div>\n' +
+            '    <div class="form-group"><label>Content : </label> <input type="text"\n' +
+            '                                                             name="content" required\n' +
+            '                                                             autofocus\n' +
+            '                                                             value=""\n' +
+            '                                                             class="form-control">\n' +
+            '    </div>\n' +
+            '</div>');
+    }
+}
+@foreach($datas as $data)
+function showContent{{$data['id']}}() {
+    hideContent();
+    $('#question{{$data['id']}}').addClass('active');
+    $("#narrow{{$data['id']}}").remove();
+    $('#question{{$data['id']}}').append('<i id = "narrow{{$data['id']}}" class="fa fa-arrow-left" aria-hidden="true" style = "color:white"></i>');
+    $('.showcontent').show();
+    $('#showcontent').append('<div id="content{{$data["id"]}}"><div class="row">\n' +
+        '                            <h3 class="m-t-none m-b  text-center">Details</h3>\n' +
+        '                                {{ Form::open(['method' => 'Update','route' => ['/qgrid/update', $data->id],'style'=>'display:inline','class'=>'form-horizontal']) }}\n' +
+        '                            <div class="col-sm-10 col-sm-offset-1 ">\n' +
+        '\n' +
+        '                                <div class="form-group" style = "display:none;"><label>Content ID : </label> <input type="number"\n' +
+        '                                                                                            name="content_id"\n' +
+        '                                                                                            required autofocus\n' +
+        '                                                                                            value="{{$data["content_id"]}}"\n' +
+        '                                                                                            class="form-control">\n' +
+        '                                </div>\n' +
+        '                                <div class="form-group"><label>Parent ID : </label> \n' +
+        '<select class="selectpicker form-control" name="parent_id">\n' +
+        '            @foreach($dpdatas as $dpdata)\n' +
+        '                @if($dpdata['parent_id'] == '0')\n' +
+        '                    @if($dpdata['parent_id'] == $data['content_id'])\n' +
+        '                        <option value="{{$dpdata['content_id'] }}" selected>{{ $dpdata['content'] }}</option>\n' +
+        '                    @else\n' +
+        '                        <option value="{{$dpdata['content_id'] }}">{{ $dpdata['content'] }}</option>\n' +
+        '                    @endif\n' +
+        '                @endif'+
+        '            @endforeach\n' +
+        '        </select>'+
+        '                                </div>\n' +
+        '\n' +
+        '                                <div class="form-group"><label>Content : </label> <input type="text"\n' +
+        '                                                                                         name="content" required\n' +
+        '                                                                                         autofocus\n' +
+        '                                                                                         value="{{$data["content"]}}"\n' +
+        '                                                                                         class="form-control">\n' +
+        '                                </div>\n' +
+        '\n' +
+        '                                <div class="form-group"><label>Created Date : {{$data["created_at"]}}</label>\n' +
+        '                                </div>\n' +
+        '                                <div class="form-group"><label>Changed Date : {{$data["updated_at"]}}</label>\n' +
+        '                                </div>\n' +
+        '                            </div>\n' +
+        '\n' +
+        '                            {{ Form::submit('Update', ['class' => 'btn btn-sm btn-success pull-right m-t-n-xs','style' => 'margin-right: 60px;']) }}\n' +
+        '                            {{ Form::close() }}\n' +
+        '                            {{ Form::open(['method' => 'Destroy','route' => ['/qgrid/delete', $data->id],'style'=>'display:inline','class'=>'form-horizontal']) }}\n' +
+        '                            {{ Form::submit('Delete', ['class' => 'btn btn-sm btn-danger pull-left m-t-n-xs','style' => 'margin-left: 60px;']) }}\n' +
+        '\n' +
+        '                            {{ Form::close() }}\n' +
+        '                        </div></div>');
+}
 
-        @endforeach
-        function hideContent() {
-            @foreach($datas as $data)
-                $('#question{{$data['id']}}').removeClass('active');
-                $('#content{{$data['id']}}').remove();
-                $("#narrow{{$data['id']}}").remove();
-                $('#question{{$data['id']}}').append('<i id = "narrow{{$data['id']}}" class="fa fa-arrow-right" aria-hidden="true"></i>');
-            @endforeach
-        }
-    </script>
+@endforeach
+function hideContent() {
+    @foreach($datas as $data)
+        $('#question{{$data['id']}}').removeClass('active');
+        $('#content{{$data['id']}}').remove();
+        $("#narrow{{$data['id']}}").remove();
+        $('#question{{$data['id']}}').append('<i id = "narrow{{$data['id']}}" class="fa fa-arrow-right" aria-hidden="true"></i>');
+    @endforeach
+}
+</script>
 
-    @else
-        No Data!
-    @endif
+@else
+No Data!
+@endif
 @endsection
